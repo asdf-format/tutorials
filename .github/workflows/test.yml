@@ -29,6 +29,9 @@ jobs:
       matrix:
         python: [ '3.9', '3.10' ]
         os: [ ubuntu-latest, macos-latest ]
+        exclude:
+          - os: macos-latest
+            python: '3.10'
     steps:
       - uses: actions/checkout@v3.0.2
       - uses: actions/setup-python@v4.1.0
@@ -77,6 +80,9 @@ jobs:
       matrix:
         python: [ '3.9', '3.10' ]
         os: [ ubuntu-latest, macos-latest ]
+        exclude:
+          - os: macos-latest
+            python: '3.10'
     steps:
       - uses: actions/checkout@v3.0.2
       - run: echo "::set-output name=date::$(date +'%Y%m%d')"
