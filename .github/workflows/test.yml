@@ -1,0 +1,106 @@
+name: test
+
+on:
+  push:
+    paths:
+      - '**/*.ipynb'
+      - '**/*.yml'
+      - '**/*.yaml'
+      - '**/*.py'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**/*.ipynb'
+      - '**/*.yml'
+      - '**/*.yaml'
+      - '**/*.py'
+
+defaults:
+  run:
+    shell: bash -l {0}
+
+jobs:
+  build:
+    name: build environment (Python ${{ matrix.python }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python: [ '3.9', '3.10' ]
+        os: [ ubuntu-latest, macos-latest ]
+    steps:
+      - uses: actions/checkout@v3.0.2
+      - uses: actions/setup-python@v4.1.0
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: mtkennerly/dunamai-action@v1.1.0
+        id: version
+      - run: echo "::set-output name=date::$(date +'%Y%m%d')"
+        id: date
+      - uses: actions/cache@v3.0.5
+        if: runner.os == 'Linux'
+        with:
+          path: |
+            /home/runner/conda_pkgs_dir
+            /usr/share/miniconda/envs/asdf-tutorial-${{ runner.os }}-py${{ matrix.python }}-latest
+          key: conda-${{ runner.os }}-py${{ matrix.python }}-${{ steps.date.outputs.date }}
+      - uses: actions/cache@v3.0.5
+        if: runner.os == 'MacOS'
+        with:
+          path: |
+            /Users/runner/conda_pkgs_dir
+            /usr/local/miniconda/envs/asdf-tutorial-${{ runner.os }}-py${{ matrix.python }}-latest
+          key: conda-${{ runner.os }}-py${{ matrix.python }}-${{ steps.date.outputs.date }}
+      - uses: conda-incubator/setup-miniconda@v2.1.1
+        with:
+          activate-environment: asdf-tutorial-${{ runner.os }}-py${{ matrix.python }}-latest
+          environment-file: environment.yml
+          python-version: ${{ matrix.python }}.*
+          auto-update-conda: true
+          use-only-tar-bz2: true
+      - run: conda env export > asdf-tutorial-py${{ matrix.python }}-v${{ steps.version.outputs.version }}.yml
+        if: runner.os == 'Linux'
+      - run: cat asdf-tutorial-py${{ matrix.python }}-v${{ steps.version.outputs.version }}.yml
+        if: runner.os == 'Linux'
+      - uses: actions/upload-artifact@v3.1.0
+        if: runner.os == 'Linux'
+        with:
+          name: asdf-tutorial-py${{ matrix.python }}-v${{ steps.version.outputs.version }}.yml
+          path: asdf-tutorial-py${{ matrix.python }}-v${{ steps.version.outputs.version }}.yml
+  run_notebooks:
+    name: run notebooks (Python ${{ matrix.python }}, ${{ matrix.os }})
+    needs: [ build ]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python: [ '3.9', '3.10' ]
+        os: [ ubuntu-latest, macos-latest ]
+    steps:
+      - uses: actions/checkout@v3.0.2
+      - run: echo "::set-output name=date::$(date +'%Y%m%d')"
+        id: date
+      - uses: actions/cache@v3.0.5
+        if: runner.os == 'Linux'
+        with:
+          path: |
+            /home/runner/conda_pkgs_dir
+            /usr/share/miniconda/envs/asdf-tutorial-${{ runner.os }}-py${{ matrix.python }}-latest
+          key: conda-${{ runner.os }}-py${{ matrix.python }}-${{ steps.date.outputs.date }}
+      - uses: actions/cache@v3.0.5
+        if: runner.os == 'MacOS'
+        with:
+          path: |
+            /Users/runner/conda_pkgs_dir
+            /usr/local/miniconda/envs/asdf-tutorial-${{ runner.os }}-py${{ matrix.python }}-latest
+          key: conda-${{ runner.os }}-py${{ matrix.python }}-${{ steps.date.outputs.date }}
+      - uses: conda-incubator/setup-miniconda@v2.1.1
+        with:
+          activate-environment: asdf-tutorial-${{ runner.os }}-py${{ matrix.python }}-latest
+          environment-file: environment.yml
+          python-version: ${{ matrix.python }}.*
+          auto-update-conda: true
+          use-only-tar-bz2: true
+      - run: conda install -y nbcollection
+      - run: python -m nbcollection execute .
