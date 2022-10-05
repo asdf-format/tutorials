@@ -1,6 +1,10 @@
 name: test
 
 on:
+  workflow_dispatch:
+  schedule:
+    # Run every Monday at 6am UTC
+    - cron: '0 6 * * 1'
   push:
     paths:
       - '**/*.ipynb'
