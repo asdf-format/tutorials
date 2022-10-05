@@ -1,0 +1,14 @@
+name: asdf-tutorial-env
+
+dependencies:
+  - jupyter
+  - matplotlib
+  - numpy
+  - pip
+  - python >= 3.9
+  - pip:
+      - asdf
+      - asdf-astropy
+      - asdf-standard
+      - astropy
+      - gwcs
