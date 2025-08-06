@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 6am UTC
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - synchronize
+
+
+# Only cancel in-progress jobs or runs for the current workflow
+#   This cancels the already triggered workflows for a specific PR without canceling
+#   other instances of this workflow (other PRs, scheduled triggers, etc) when something
+#   within that PR re-triggers this CI
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core:
+    uses: OpenAstronomy/github-actions-workflows/.github/workflows/tox.yml@v2
+    with:
+      submodules: false
+      default_python: '3.13'
+      envs: |
+        - linux: notebooks
