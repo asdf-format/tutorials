@@ -1,0 +1,5 @@
+asdf
+astropy
+asdf-astropy
+gwcs
+matplotlib
