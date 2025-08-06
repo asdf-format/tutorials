@@ -1,0 +1,23 @@
+%YAML 1.1
+---
+id: asdf://stsci.edu/example-project/manifests/allmyschemas-1.0
+extension_uri: asdf://stsci.edu/example-project/extensions/allmyschemas-1.0
+title: All my schemas 1.0
+description: |-
+  A set of tags for serializing all my schemas.
+asdf_standard_requirement:
+  gte: 1.1.0
+tags:
+# Object Modules
+- tag_uri: asdf://stsci.edu/example-project/tags/photo_id-1.0.0
+  schema_uri: asdf://stsci.edu/example-project/schemas/photo_id-1.0.0
+  title: Photo ID information
+  description: |-
+    Name on Photo ID and the photo from the Photo ID
+- tag_uri: asdf://stsci.edu/example-project/tags/traffic_citation-1.0.0
+  schema_uri: asdf://stsci.edu/example-project/schemas/traffic_citation-1.0.0
+  title: Information about an issued traffic citation
+  description: |-
+    Information about an issued traffic citation including ociffer name, type of violation,
+    date, time, and photo ID.
+...
