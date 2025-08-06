@@ -8,8 +8,8 @@ on:
     branches:
       - main
   pull_request:
-    types:
-      - synchronize
+    branches:
+      - main
 
 
 # Only cancel in-progress jobs or runs for the current workflow

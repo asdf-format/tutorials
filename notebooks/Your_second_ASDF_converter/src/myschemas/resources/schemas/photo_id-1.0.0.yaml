@@ -1,0 +1,24 @@
+%YAML 1.1
+---
+$schema: "http://stsci.edu/schemas/yaml-schema/draft-01"
+id: asdf://stsci.edu/example-project/schemas/photo_id-1.0.0
+
+title: Photo ID information
+type: object
+properties:
+  last_name:
+    title: Last name of the ID holder
+    type: string
+  first_name:
+    title: First name of ID holder
+    type: string
+  photo:
+    title: Monochromatic photo of ID holder
+    tag: tag:stsci.edu:asdf/core/ndarray-1.0.0
+    datatype: int8
+    ndim: 2
+
+propertyOrder: [last_name, first_name, photo]
+flowStyle: block
+required: [last_name, first_name, photo]
+...

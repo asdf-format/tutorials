@@ -1,0 +1,18 @@
+[project]
+name = "myconverters"
+description = "TODO"
+version='0.1.0'
+requires-python = ">=3.9"
+dependencies = [
+    "asdf >=2.8",
+]
+
+[build-system]
+requires = ["setuptools >=61", "setuptools_scm[toml] >=3.4"]
+build-backend = "setuptools.build_meta"
+
+[project.entry-points."asdf.resource_mappings"]
+myschema = "myschemas.integration:get_resource_mappings"
+
+[project.entry-points."asdf.extensions"]
+myconverters = "myconverters.integration:get_extensions"

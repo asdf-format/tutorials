@@ -1,0 +1,29 @@
+%YAML 1.1
+---
+$schema: "http://stsci.edu/schemas/yaml-schema/draft-01"
+id: asdf://stsci.edu/example-project/schemas/traffic_citation-1.0.0
+
+title: Traffic Citation Information
+type: object
+properties:
+  ociffer:
+    title: Name of ociffer issuing citation
+    type: string
+  violation:
+    title: Type of traffic violation
+    type: string
+    enum: ["speeding", "DWI", "Failure to Signal", "Driving like a jerk"]
+  date:
+    title: Date of violation
+    type: string 
+  time:
+    title: Time of day of violation
+    type: string
+  photo_id:
+    title: photo_id of the driver committing violation
+    tag: asdf://stsci.edu/example-project/tags/photo_id-1.0.0
+
+propertyOrder: [ociffer, violation, date, time, photo_id]
+flowStyle: block
+required: [ociffer, violation, date, time, photo_id]
+...
